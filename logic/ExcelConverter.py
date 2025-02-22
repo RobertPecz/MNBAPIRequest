@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pandas as pd
 
 
@@ -7,7 +9,17 @@ class ExcelConverter:
 
     def excel_file_validator(self):
         df = pd.DataFrame(self.api_data)
-        df.to_excel("output.xlsx", index=False, engine="openpyxl")
+
+        # today = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
+        # df.to_excel need to change pd.ExcelWriter as to excel not support appending
+
+        df.to_excel(
+            excel_writer="output.xlsx",
+            sheet_name=str(str(datetime.now().strftime("%Y-%m-%d %H-%M-%S"))),
+            index=False,
+            engine="openpyxl",
+        )
         # put new excel sheet
 
 
