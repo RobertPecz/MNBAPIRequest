@@ -24,13 +24,12 @@ class APIHandler:
 
         return requests.post(url, data=body, headers=headers)
 
-    def api_response_converter(self):
-        api_respsone = self.api_request_sender()  # need two argument
+    def api_response_converter(self, start_date, end_date):
+        api_respsone = self.api_request_sender(start_date, end_date)
         dom = html.unescape(api_respsone.text)
 
         tree = etree.XML(dom)
 
-        # Use XPath to find Day elements, considering the namespaces
         namespaces = {
             "s": "http://schemas.xmlsoap.org/soap/envelope/",
             "mnb": "http://www.mnb.hu/webservices/",
@@ -44,9 +43,5 @@ class APIHandler:
             rate = day.find(".//mnb:Rate", namespaces=namespaces).text
             api_data["Date"].append(date)
             api_data["Rate"].append(rate)
-            # print(f"Date: {date}, Rate: {rate}")
 
         return api_data
-
-
-# print(html.unescape(str(response.content)))
