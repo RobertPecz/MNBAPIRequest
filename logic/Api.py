@@ -5,9 +5,8 @@ from lxml import etree
 
 
 class APIHandler:
+    # Send the Soap request to get the exchange data.
     def api_request_sender(self, start_date, end_date):
-        # check start_date and end_date format
-        # check that start_date should before _end date
         url = "http://www.mnb.hu/arfolyamok.asmx?wsdl"
         headers = {"content-type": "text/xml"}
         body = f"""<?xml version="1.0" encoding="utf-8"?> 
@@ -24,6 +23,7 @@ class APIHandler:
 
         return requests.post(url, data=body, headers=headers)
 
+    # Parsing the data from soap response into a dictionary.
     def api_response_converter(self, start_date, end_date):
         api_respsone = self.api_request_sender(start_date, end_date)
         dom = html.unescape(api_respsone.text)

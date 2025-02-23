@@ -177,7 +177,7 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
-#XLS file
-output.xlsx
+#XLSX file
+*.xlsx*
 
 # End of https://www.toptal.com/developers/gitignore/api/python
