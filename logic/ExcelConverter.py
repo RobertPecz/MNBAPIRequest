@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pandas as pd
 
 
@@ -5,23 +7,33 @@ class ExcelConverter:
     def __init__(self, api_data):
         self.api_data = api_data
 
-    def excel_file_validator(self):
+    # Check whether an excel file is exist in the folder.
+    def is_excel_file_exist(self):
+        try:
+            pd.ExcelFile("output.xlsx")
+            return True
+        except FileNotFoundError:
+            print("The output.xlsx file not found, creating a new file")
+            return False
+
+    # Writing the data from the soap response into an excel file sheet.
+    def excel_file_writer(self):
         df = pd.DataFrame(self.api_data)
-        df.to_excel("output.xlsx", index=False, engine="openpyxl")
-        # put new excel sheet
 
-
-# import pandas as pd
-
-# Create a DataFrame with some sample data
-# data = {
-#    'Date': ['2025-02-20', '2025-02-21', '2025-02-22'],
-#    'Rate': [100, 105, 110]
-# }
-
-# df = pd.DataFrame(data)
-
-# Write the DataFrame to an Excel file
-# df.to_excel('output.xlsx', index=False, engine='openpyxl')
-
-# print("Excel file created successfully!")
+        is_file_exist = self.is_excel_file_exist()
+        if is_file_exist:
+            with pd.ExcelWriter(
+                path="output.xlsx", if_sheet_exists="new", mode="a", engine="openpyxl"
+            ) as writer:
+                df.to_excel(
+                    writer,
+                    index=False,
+                    sheet_name=str(str(datetime.now().strftime("%Y-%m-%d %H-%M-%S"))),
+                )
+        else:
+            with pd.ExcelWriter(path="output.xlsx", engine="openpyxl") as writer:
+                df.to_excel(
+                    writer,
+                    index=False,
+                    sheet_name=str(str(datetime.now().strftime("%Y-%m-%d %H-%M-%S"))),
+                )
